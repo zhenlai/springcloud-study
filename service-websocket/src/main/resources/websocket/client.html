@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="sockjs.min.js"></script>
+		<script src="stomp.js"></script>
+		<script>
+			var url = "http://localhost:8080/portfolio" 
+			var socket = new SockJS(url);
+			var stompClient = Stomp.over(socket);
+			var payload = JSON.stringify({'greeting':'hello websocket'});
+
+			stompClient.connect({}, function(frame) {
+				stompClient.send("/say",{},payload);
+				stompClient.subscribe("/user/queue/toUser",handleToUser);
+			})
+			
+			function handleToUser(incoming){
+				console.log("incoming => " + JSON.stringify(incoming))
+				
+			}
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
