@@ -3,6 +3,7 @@ package om.example.springcloud.servicewebsocket.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -30,11 +31,13 @@ public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
 //        registry.enableSimpleBroker("/topic", "/queue");
-        registry.enableStompBrokerRelay("/exchange","/topic","/queue","/amq/queue")
-                .setRelayHost("http://192.168.141.238")
+        registry.setPathMatcher(new AntPathMatcher("."));
+        registry.enableStompBrokerRelay("/queue", "/topic")
+                .setRelayHost("192.168.3.30")
                 .setRelayPort(61613)
-                .setClientLogin("admin")
-                .setClientPasscode("admin")
+                .setClientLogin("guest")
+                .setClientPasscode("guest")
+                .setVirtualHost("/test")
                 .setSystemHeartbeatSendInterval(5000)
                 .setSystemHeartbeatReceiveInterval(4000);
         //registry.setApplicationDestinationPrefixes("app");
