@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="sockjs.min.js"></script>
+		<script src="stomp.js"></script>
+		<script>
+			var url = "http://localhost:8080/portfolio" 
+			var socket = new SockJS(url);
+			var stompClient = Stomp.over(socket);
+			var payload = JSON.stringify({'greeting':'hello websocket'});
+
+			stompClient.connect({}, function(frame) {
+                stompClient.subscribe("/exchange/topic.user/user1",handleTopicUser);
+			})
+			//接收消息
+            function handleTopicUser(incoming){
+                console.log("handleTopicUser => " + JSON.stringify(incoming))
+				//确认收到消息
+				//debugger
+                console.log("handleTopicUser => {message-id" + incoming.headers["message-id"])
+				var header = {
+                    "destination":"/exchange/topic.user/user1"
+				};
+                stompClient.ack(incoming.headers["message-id"],incoming.headers.subscription,header);
+            }
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

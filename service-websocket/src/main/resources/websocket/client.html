@@ -8,16 +8,10 @@
 			var socket = new SockJS(url);
 			var stompClient = Stomp.over(socket);
 			var payload = JSON.stringify({'greeting':'hello websocket'});
-
+			//发送
 			stompClient.connect({}, function(frame) {
-				stompClient.send("/say",{},payload);
-				stompClient.subscribe("/user/queue/toUser",handleToUser);
+				stompClient.send("/exchange/topic.user",{},payload);
 			})
-			
-			function handleToUser(incoming){
-				console.log("incoming => " + JSON.stringify(incoming))
-				
-			}
 		</script>
 	</head>
 	<body>

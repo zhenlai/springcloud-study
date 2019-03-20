@@ -23,7 +23,7 @@ public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/portfolio","/webSocket")
+        registry.addEndpoint("/portfolio")
                 .setAllowedOrigins("*")//
                 .withSockJS();
     }
@@ -31,13 +31,15 @@ public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
 //        registry.enableSimpleBroker("/topic", "/queue");
-        registry.setPathMatcher(new AntPathMatcher("."));
-        registry.enableStompBrokerRelay("/queue", "/topic")
-                .setRelayHost("192.168.3.30")
+        //registry.setPathMatcher(new AntPathMatcher("."));
+        registry.enableStompBrokerRelay("/queue", "/topic","/exchange")
+                .setRelayHost("192.168.141.238")
                 .setRelayPort(61613)
-                .setClientLogin("guest")
-                .setClientPasscode("guest")
-                .setVirtualHost("/test")
+                .setClientLogin("admin")
+                .setClientPasscode("admin")
+                .setSystemLogin("admin")
+                .setSystemPasscode("admin")
+                .setVirtualHost("/user")
                 .setSystemHeartbeatSendInterval(5000)
                 .setSystemHeartbeatReceiveInterval(4000);
         //registry.setApplicationDestinationPrefixes("app");

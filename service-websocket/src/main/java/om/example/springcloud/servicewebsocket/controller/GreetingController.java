@@ -3,6 +3,7 @@ package om.example.springcloud.servicewebsocket.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
@@ -35,17 +36,25 @@ public class GreetingController {
         return "5555" + greeting;
     }
 
-    @MessageMapping("/say")
-    @SendToUser("/queue/toUser")
+    @MessageMapping("/exchange/topic.user")
+    @SendTo("/exchange/topic.user/user1")
     public String handleSay(String greeting){
         System.out.println("say =>" + greeting );
-        return "hello web socket!";
+        return "hello web socket! /topic.user/user1";
     }
 
     @MessageMapping("/say.{user}")
-    @SendToUser("/queue/toUser.{user}")
+    @SendToUser("/topic/toUser.{user}")
     public String handleSayVariable(String greeting, @DestinationVariable String user){
         System.out.println(user + "  say =>" + greeting );
         return "hello web socket from user!";
+    }
+
+    @PostMapping("/sayToUser")
+    @ResponseBody
+    public String sayToUser(String message,String user){
+        System.out.println("====sayToUser====");
+        messagingTemplate.convertAndSendToUser(user,"/user/topic/toUser.zzl",   message);
+        return "hello send";
     }
 }
